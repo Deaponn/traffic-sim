@@ -1,5 +1,5 @@
 import { Box, Grid, Paper, Button } from "@mui/material";
-// import IntersectionControls from "../controls/IntersectionControls";
+import IntersectionControls from "../controls/IntersectionControls";
 import { useUIStore } from "../../store/useUIStore";
 // import IntersectionCanvas from "../../canvas/IntersectionCanvas";
 
@@ -19,7 +19,7 @@ export default function IntersectionCreator() {
               overflow: "hidden",
             }}
           >
-            {/* <IntersectionControls /> */}
+            <IntersectionControls />
           </Paper>
         </Grid>
         <Grid size={{ xs: 12, md: 8 }} sx={{ height: "100%" }}>
