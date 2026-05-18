@@ -38,7 +38,7 @@ export default function App() {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        bgcolor: "#f5f5f5",
+        bgcolor: "primary.light",
       }}
     >
       <Paper elevation={2} sx={{ p: 3, mb: 2, borderRadius: 0 }}>
