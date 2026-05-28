@@ -7,7 +7,8 @@ export default class Simulation {
     private readonly intersection: Intersection;
 
     constructor(intersectionDescription: IntersectionDescription, controllerType: ControllerTypes) {
-        this.intersection = new Intersection(roadsFactory(intersectionDescription), controllers[controllerType]);
+        this.intersection = new Intersection(roadsFactory(intersectionDescription));
+        this.controller = controllers[controllerType]();
     }
 
     public step(): string {

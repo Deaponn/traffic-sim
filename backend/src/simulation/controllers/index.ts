@@ -1,5 +1,5 @@
-import SimpleController from "./SimpleController.js";
+import SimpleController from './SimpleController.js';
 
 export default {
-    'simple-controller': new SimpleController()
+    'simple-controller': () => new SimpleController(),
 };
