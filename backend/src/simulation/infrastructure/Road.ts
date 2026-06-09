@@ -27,10 +27,7 @@ export default class Road {
 
     constructor(position: WorldDirection) {
         this.axis = axisOfDirection[position];
-<<<<<<< HEAD
         this.position = position;
-=======
->>>>>>> main
     }
 
     public assignLanes(inputLanes: InputLane[], outputLanes: OutputLane[]) {
@@ -55,24 +52,15 @@ export default class Road {
     }
 
     public walkPedestrians() {
-<<<<<<< HEAD
         if (!this.willPedestriansCross) return;
         this.pedestrianCrossingProgress--;
         if (this.pedestrianCrossingProgress !== 0) return; // artificially prolong the timing of pedestrians crossing
-=======
-        this.pedestrianCrossingProgress--;
-        if (this.pedestrianCrossingProgress !== 0) return; // artificially prolong the timing of pedestrians crossing
-        if (!this.willPedestriansCross) return;
->>>>>>> main
         // all pedestrians cross at the same time, in one simulation step
         this.pedestriansCrossed = [...this.pedestriansWaiting.left, ...this.pedestriansWaiting.right];
         this.pedestriansWaiting.left = [];
         this.pedestriansWaiting.right = [];
         this.willPedestriansCross = false;
-<<<<<<< HEAD
         this.pedestrianCrossingProgress = Road.PEDESTRIAN_SUBSTEP_SPEED;
-=======
->>>>>>> main
     }
 
     public drivePreCrosswalk() {
@@ -96,14 +84,9 @@ export default class Road {
     }
 
     public willPedestriansCrossFrom(side: RoadSide) {
-<<<<<<< HEAD
-        if (this.pedestrianCrossingProgress === 3)
-            // when pedestrians start crossing, they are present only on one of the road sides
+        if (this.pedestrianCrossingProgress === 3) // when pedestrians start crossing, they are present only on one of the road sides
             return this.willPedestriansCross && this.pedestriansWaiting[side].length > 0;
         return this.willPedestriansCross; // after some time, pedestrians are scattered along the whole road
-=======
-        return this.willPedestriansCross && this.pedestriansWaiting[side].length > 0;
->>>>>>> main
     }
 
     public hasCarsDriving(direction: RelativeDirection): boolean {
@@ -119,11 +102,6 @@ export default class Road {
     }
 
     public collectCompletedActors(): string[] {
-<<<<<<< HEAD
-        return this.outputLanes.flatMap((lane) => lane.collectOutputActors());
-    }
-}
-=======
         const actorIds = this.pedestriansCrossed.map((pedestrian) => pedestrian.getId());
         this.pedestriansCrossed = [];
         return [...actorIds, ...this.outputLanes.flatMap((lane) => lane.collectOutput()).filter((id) => id !== null)];
@@ -140,4 +118,3 @@ export default class Road {
         };
     }
 }
->>>>>>> main
