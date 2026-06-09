@@ -31,6 +31,7 @@ export default function IntersectionCreator() {
               alignItems: "center",
               justifyContent: "center",
               bgcolor: "#e0e0e0",
+              overflow: "hidden",
             }}
           >
             <IntersectionCanvas mode="edit" />

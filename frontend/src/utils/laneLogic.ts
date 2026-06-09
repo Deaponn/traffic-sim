@@ -41,18 +41,18 @@ export const getDisabledTurns = (
   };
 };
 
-const turnMap: Record<WorldDirection, Record<string, RelativeDirection>> = {
-  north: { south: "straightAhead", east: "left", west: "right" },
-  east: { west: "straightAhead", south: "left", north: "right" },
-  south: { north: "straightAhead", west: "left", east: "right" },
-  west: { east: "straightAhead", north: "left", south: "right" },
-};
-
 export const getTurnDirection = (
   startRoad: WorldDirection,
   endRoad: WorldDirection,
 ): RelativeDirection | null => {
   if (startRoad === endRoad) return null; // u-turns not allowed
+
+  const turnMap: Record<WorldDirection, Record<string, RelativeDirection>> = {
+    north: { south: "straightAhead", east: "left", west: "right" },
+    east: { west: "straightAhead", south: "left", north: "right" },
+    south: { north: "straightAhead", west: "left", east: "right" },
+    west: { east: "straightAhead", north: "left", south: "right" },
+  };
 
   return turnMap[startRoad][endRoad];
 };
