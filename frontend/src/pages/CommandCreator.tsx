@@ -1,6 +1,6 @@
 import { Box, Grid, Paper } from "@mui/material";
-import CommandControls from "../controls/CommandControls";
-import IntersectionCanvas from "../../canvas/IntersectionCanvas";
+import CommandControls from "../components/controls/CommandControls";
+import IntersectionCanvas from "../canvas/IntersectionCanvas";
 
 export default function Screen3CommandCreator() {
   return (

@@ -1,6 +1,6 @@
 import { Box, Grid, Paper } from "@mui/material";
-import IntersectionControls from "../controls/IntersectionControls";
-import IntersectionCanvas from "../../canvas/IntersectionCanvas";
+import IntersectionControls from "../components/controls/IntersectionControls";
+import IntersectionCanvas from "../canvas/IntersectionCanvas";
 
 export default function IntersectionCreator() {
   return (

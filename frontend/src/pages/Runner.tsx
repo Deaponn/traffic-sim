@@ -10,10 +10,10 @@ import {
   Stack,
 } from "@mui/material";
 import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@mui/icons-material";
-import IntersectionCanvas from "../../canvas/IntersectionCanvas";
-import { useUIStore } from "../../store/useUIStore";
-import { useSimulationStore } from "../../store/useSimulationStore";
-import { useAnimationStore } from "../../store/useAnimationStore";
+import IntersectionCanvas from "../canvas/IntersectionCanvas";
+import { useUIStore } from "../store/useUIStore";
+import { useSimulationStore } from "../store/useSimulationStore";
+import { useAnimationStore } from "../store/useAnimationStore";
 
 export default function Screen4SimulationRunner() {
   const setStep = useUIStore((state) => state.setStep);

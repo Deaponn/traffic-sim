@@ -8,9 +8,9 @@ import {
   Container,
 } from "@mui/material";
 import { AddBox, Traffic } from "@mui/icons-material";
-import { useUIStore } from "../../store/useUIStore";
-import { useSimulationStore } from "../../store/useSimulationStore";
-import { PRESETS } from "../../presets/intersection";
+import { useUIStore } from "../store/useUIStore";
+import { useSimulationStore } from "../store/useSimulationStore";
+import { PRESETS } from "../presets/intersection";
 
 export default function StartScreen() {
   const setStep = useUIStore((state) => state.setStep);

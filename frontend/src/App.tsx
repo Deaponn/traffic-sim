@@ -1,10 +1,10 @@
 import { Box, Stepper, Step, StepLabel, Container, Paper } from "@mui/material";
 import { useUIStore } from "./store/useUIStore";
 
-import StartScreen from "./components/screens/Start";
-import IntersectionCreator from "./components/screens/IntersectionCreator";
-import CommandCreator from "./components/screens/CommandCreator";
-import Runner from "./components/screens/Runner";
+import StartScreen from "./pages/Start";
+import IntersectionCreator from "./pages/IntersectionCreator";
+import CommandCreator from "./pages/CommandCreator";
+import Runner from "./pages/Runner";
 
 const steps = [
   "Choose Preset",
