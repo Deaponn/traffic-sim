@@ -1,27 +1,31 @@
-import Controller from '#simulation/controllers/Controller.js';
-import { TrafficLightsState, WorldDirection } from '#simulation/types/index.js';
+import Car from '#simulation/actors/Car.js';
+import Pedestrian from '#simulation/actors/Pedestrian.js';
+import { IntersectionDescription, IntersectionSnapshot, RoadSide, TrafficLightsState, WorldDirection } from '#simulation/types/index.js';
 
 import Road from './Road.js';
 
-interface StepStatus {
-    leftVehicles: string[];
-    trafficLights: TrafficLightsState;
-}
-
 export default class Intersection {
     private readonly roads: Record<WorldDirection, Road>;
-    private readonly controller: Controller;
 
-    constructor(roads: Record<WorldDirection, Road>, controller: Controller) {
+    constructor(roads: Record<WorldDirection, Road>) {
         this.roads = roads;
-        this.controller = controller;
     }
 
-    public step(): StepStatus {
-        const lights = this.controller.step(this);
+    public substep(lights: TrafficLightsState): string[] {
         this.decideAboutDriving(lights);
         this.drive();
-        return this.collectCompletedActors(lights);
+        return this.collectCompletedActors();
+    }
+
+    public driveIntoRoad(car: Car, road: WorldDirection, laneIdx?: number) {
+        const startRoad = this.roads[road];
+        laneIdx ??= startRoad.findSufficientLane(car.getDirection());
+        if (laneIdx === -1) throw Error('There is no lane which satisfies this Car');
+        this.roads[road].driveIntoLane(car, laneIdx);
+    }
+
+    public walkUpToCrosswalk(pedestrian: Pedestrian, road: WorldDirection, side: RoadSide) {
+        this.roads[road].walkUpToCrosswalk(pedestrian, side);
     }
 
     private decideAboutDriving(lights: TrafficLightsState) {
@@ -54,14 +58,37 @@ export default class Intersection {
         });
     }
 
-    private collectCompletedActors(lights: TrafficLightsState): StepStatus {
-        return {
-            trafficLights: lights,
-            leftVehicles: Object.values(this.roads).flatMap((road) => road.collectCompletedActors()),
-        };
+    private collectCompletedActors(): string[] {
+        return Object.values(this.roads).flatMap((road) => road.collectCompletedActors());
     }
 
     public getRoads() {
         return this.roads;
+    }
+
+    public collectSnapshot(): IntersectionSnapshot {
+        return {
+            north: this.roads.north.collectSnapshot(),
+            east: this.roads.east.collectSnapshot(),
+            south: this.roads.south.collectSnapshot(),
+            west: this.roads.west.collectSnapshot(),
+        }
+    }
+
+    public static basicIntersection(): IntersectionDescription {
+        return {
+            north: {
+                lanes: [{ availableTurns: ['left', 'right', 'straightAhead'] }],
+            },
+            east: {
+                lanes: [{ availableTurns: ['left', 'right', 'straightAhead'] }],
+            },
+            south: {
+                lanes: [{ availableTurns: ['left', 'right', 'straightAhead'] }],
+            },
+            west: {
+                lanes: [{ availableTurns: ['left', 'right', 'straightAhead'] }],
+            },
+        };
     }
 }

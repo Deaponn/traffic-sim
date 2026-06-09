@@ -1,4 +1,4 @@
-import { RelativeDirection } from '#simulation/types/index.js';
+import { CarJson, RelativeDirection } from '#simulation/types/index.js';
 
 export default class Car {
     private readonly vehicleId: string;
@@ -14,5 +14,16 @@ export default class Car {
 
     public getId() {
         return this.vehicleId;
+    }
+
+    public getDirection() {
+        return this.direction;
+    }
+
+    public toJson(): CarJson {
+        return {
+            vehicleId: this.vehicleId,
+            direction: this.direction,
+        };
     }
 }

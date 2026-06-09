@@ -1,50 +1,47 @@
 import Car from '#simulation/actors/Car.js';
-import Pedestrian from '#simulation/actors/Pedestrian.js';
-import { Axis, TrafficLightsState } from '#simulation/types/index.js';
+import { OutputLanesSnapshot } from '#simulation/types/index.js';
+import Road from './Road.js';
 
 export default class OutputLane {
-    private readonly axis: Axis;
-
-    private readonly hasCrosswalk: boolean;
-    private pedestriansWaiting: Pedestrian[] = [];
-    private pedestriansCrossed: Pedestrian[] = [];
-    private willPedestriansWalk = false;
+    private readonly road: Road;
 
     private preCrosswalkCar: Car | null = null;
     private postCrosswalkCar: Car | null = null;
     private willPreCrosswalkDrive = false;
 
-    constructor(axis: Axis, hasCrosswalk: boolean) {
-        this.axis = axis;
-        this.hasCrosswalk = hasCrosswalk;
-    }
-
-    public decidePedestrians(lights: TrafficLightsState) {
-        this.willPedestriansWalk = lights.greenAxis === this.axis;
-    }
-
-    public walkPedestrians() {
-        if (this.willPedestriansWalk) { // all pedestrians cross at the same time, in one simulation step
-            this.pedestriansCrossed = this.pedestriansWaiting;
-            this.pedestriansWaiting = [];
-        }
+    constructor(road: Road) {
+        this.road = road;
     }
 
     public decidePreCrosswalk() {
-        this.willPreCrosswalkDrive = !this.willPedestriansWalk; // rule is simple: don't run over pedestrians :)
+        this.willPreCrosswalkDrive = !this.road.willPedestriansCrossFrom('left'); // the rule is simple: don't run over pedestrians :)
     }
 
     public drivePreCrosswalk() {
         if (!this.willPreCrosswalkDrive) return;
         this.postCrosswalkCar = this.preCrosswalkCar;
         this.preCrosswalkCar = null;
+        this.willPreCrosswalkDrive = false;
     }
 
-    public collectOutputActors(): string[] {
-        const actorIds = this.pedestriansCrossed.map(pedestrian => pedestrian.getId());
-        if (this.postCrosswalkCar) actorIds.push(this.postCrosswalkCar.getId());
-        this.pedestriansCrossed = [];
+    public willHaveSpacePreCrosswalk(): boolean {
+        return !this.preCrosswalkCar || this.willPreCrosswalkDrive;
+    }
+
+    public driveIntoPreCrosswalk(car: Car) {
+        this.preCrosswalkCar = car;
+    }
+
+    public collectOutput(): string | null {
+        const carId = this.postCrosswalkCar?.getId() ?? null;
         this.postCrosswalkCar = null;
-        return actorIds;
+        return carId;
+    }
+
+    public collectSnapshot(): OutputLanesSnapshot[number] {
+        return {
+            preCrosswalkCar: this.preCrosswalkCar?.toJson() ?? null,
+            postCrosswalkCar: this.postCrosswalkCar?.toJson() ?? null,
+        };
     }
 }
