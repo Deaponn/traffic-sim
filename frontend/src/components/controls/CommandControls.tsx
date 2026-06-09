@@ -34,18 +34,30 @@ import { worldDirections } from "../../constants";
 import NavBar from "./NavBar";
 
 // Helper to calculate end road based on start road and relative turn
-const calculateEndRoad = (
-  start: WorldDirection,
-  turn: RelativeDirection,
-): WorldDirection => {
-  const startIdx = worldDirections.indexOf(start);
-  if (turn === "right")
-    return worldDirections[(startIdx + 1) % 4] as WorldDirection;
-  if (turn === "straightAhead")
-    return worldDirections[(startIdx + 2) % 4] as WorldDirection;
-  if (turn === "left")
-    return worldDirections[(startIdx + 3) % 4] as WorldDirection;
-  return "south";
+const worldAndRelativeToWorldDirection: Record<
+  WorldDirection,
+  Record<RelativeDirection, WorldDirection>
+> = {
+  north: {
+    right: "west",
+    left: "east",
+    straightAhead: "south",
+  },
+  east: {
+    right: "north",
+    left: "south",
+    straightAhead: "west",
+  },
+  south: {
+    right: "east",
+    left: "west",
+    straightAhead: "north",
+  },
+  west: {
+    right: "south",
+    left: "north",
+    straightAhead: "east",
+  },
 };
 
 // Theme colors to match screenshot
@@ -116,7 +128,7 @@ export default function CommandControls() {
       string,
     ];
     const laneIdx = parseInt(laneStr);
-    const endRoad = calculateEndRoad(startRoad, vehicleTurn);
+    const endRoad = worldAndRelativeToWorldDirection[startRoad][vehicleTurn];
 
     const vehicleCount = commands.filter((c) => c.type === "addVehicle").length;
     addCommand({
@@ -472,7 +484,17 @@ export default function CommandControls() {
 
       {/* Existing Command List (retained for functional parity, visually separated) */}
       <Box
-        sx={{ pt: 2, position: 'fixed', right: 20, top: 0, marginTop: 10, width: 350, height: 250, zIndex: 1, overflow: 'scroll' }}
+        sx={{
+          pt: 2,
+          position: "fixed",
+          right: 20,
+          top: 0,
+          marginTop: 10,
+          width: 350,
+          height: 250,
+          zIndex: 1,
+          overflow: "scroll",
+        }}
       >
         <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
           Command Sequence ({commands.length})
