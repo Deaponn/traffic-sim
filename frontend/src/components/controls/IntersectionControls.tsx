@@ -19,7 +19,17 @@ import { useUIStore } from "../../store/useUIStore";
 import { getDisabledTurns } from "../../utils/laneLogic";
 import type { RelativeDirection } from "../../types/index";
 import { worldDirections } from "../../constants";
-import NavBar from "./NavBar";
+import { themeColors } from "../../theme";
+import Card from "../Card";
+
+// Custom Checkbox Icons
+const UncheckedIcon = ({ bgcolor }: { bgcolor: string }) => (
+  <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor }} />
+);
+
+const CheckedIcon = ({ color }: { color: string }) => (
+  <CheckCircle sx={{ color, width: 22, height: 22, m: "-1px" }} />
+);
 
 export default function IntersectionControls() {
   const { intersectionDescription, setLaneCount, setLaneTurns } =
@@ -28,12 +38,6 @@ export default function IntersectionControls() {
 
   const currentRoadData = intersectionDescription[selectedRoad] || {
     lanes: [],
-  };
-
-  const handleCopyJson = () => {
-    navigator.clipboard.writeText(
-      JSON.stringify(intersectionDescription, null, 2),
-    );
   };
 
   const toggleTurn = (laneIndex: number, turn: RelativeDirection) => {
@@ -45,52 +49,8 @@ export default function IntersectionControls() {
     setLaneTurns(selectedRoad, laneIndex, newTurns);
   };
 
-  // Color Palette specifically matching the screenshot design
-  const themeColors = {
-    bgApp: "#F5F3EB",
-    bgCard: "#EFEBE1",
-    bgLane: "#FAFAFA",
-    textGreen: "#5D8A66",
-    textGray: "#8A8A8A",
-    textDark: "#4A4A4A",
-    borderLight: "#E0DCD1",
-    circleUnchecked: "#DCD8CF",
-  };
-
-  // Custom Checkbox Icons
-  const UncheckedIcon = () => (
-    <Box
-      sx={{
-        width: 20,
-        height: 20,
-        borderRadius: "50%",
-        bgcolor: themeColors.circleUnchecked,
-      }}
-    />
-  );
-
-  const CheckedIcon = () => (
-    <CheckCircle
-      sx={{
-        color: themeColors.textGreen,
-        width: 22,
-        height: 22,
-        m: "-1px", // Adjusts slight size difference for centering
-      }}
-    />
-  );
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        bgcolor: themeColors.bgApp,
-        p: { xs: 1, md: 2 },
-        overflowY: "auto",
-      }}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Stack spacing={2.5} sx={{ flexGrow: 1, mb: 4 }}>
         {worldDirections.map((road) => {
           const isSelected = road === selectedRoad;
@@ -102,15 +62,7 @@ export default function IntersectionControls() {
           // --- EXPANDED (SELECTED) ROAD CARD ---
           if (isSelected) {
             return (
-              <Box
-                key={road}
-                sx={{
-                  bgcolor: themeColors.bgCard,
-                  borderRadius: 3,
-                  p: 2,
-                  border: `1px solid ${themeColors.borderLight}`,
-                }}
-              >
+              <Card key={road} sx={{ mb: 0 }}>
                 <Typography
                   variant="h5"
                   sx={{ color: themeColors.textGreen, mb: 3 }}
@@ -187,10 +139,7 @@ export default function IntersectionControls() {
                         onMouseLeave={() => setHoveredLaneIndex(null)}
                       >
                         <Typography
-                          sx={{
-                            color: themeColors.textDark,
-                            minWidth: "60px",
-                          }}
+                          sx={{ color: themeColors.textDark, minWidth: "60px" }}
                         >
                           Lane {index + 1}
                         </Typography>
@@ -206,8 +155,16 @@ export default function IntersectionControls() {
                             <FormControlLabel
                               control={
                                 <Checkbox
-                                  icon={<UncheckedIcon />}
-                                  checkedIcon={<CheckedIcon />}
+                                  icon={
+                                    <UncheckedIcon
+                                      bgcolor={themeColors.circleUnchecked}
+                                    />
+                                  }
+                                  checkedIcon={
+                                    <CheckedIcon
+                                      color={themeColors.textGreen}
+                                    />
+                                  }
                                   checked={lane.availableTurns.includes("left")}
                                   onChange={() => toggleTurn(index, "left")}
                                   disabled={disabledTurns.left}
@@ -238,8 +195,16 @@ export default function IntersectionControls() {
                             <FormControlLabel
                               control={
                                 <Checkbox
-                                  icon={<UncheckedIcon />}
-                                  checkedIcon={<CheckedIcon />}
+                                  icon={
+                                    <UncheckedIcon
+                                      bgcolor={themeColors.circleUnchecked}
+                                    />
+                                  }
+                                  checkedIcon={
+                                    <CheckedIcon
+                                      color={themeColors.textGreen}
+                                    />
+                                  }
                                   checked={lane.availableTurns.includes(
                                     "straightAhead",
                                   )}
@@ -274,8 +239,16 @@ export default function IntersectionControls() {
                             <FormControlLabel
                               control={
                                 <Checkbox
-                                  icon={<UncheckedIcon />}
-                                  checkedIcon={<CheckedIcon />}
+                                  icon={
+                                    <UncheckedIcon
+                                      bgcolor={themeColors.circleUnchecked}
+                                    />
+                                  }
+                                  checkedIcon={
+                                    <CheckedIcon
+                                      color={themeColors.textGreen}
+                                    />
+                                  }
                                   checked={lane.availableTurns.includes(
                                     "right",
                                   )}
@@ -302,27 +275,24 @@ export default function IntersectionControls() {
                     );
                   })}
                 </Stack>
-              </Box>
+              </Card>
             );
           }
 
           // --- COLLAPSED (UNSELECTED) ROAD CARD ---
           return (
-            <Box
+            <Card
               key={road}
               onClick={() => setSelectedRoad(road)}
               sx={{
-                bgcolor: themeColors.bgCard,
                 borderRadius: 4,
                 p: 3,
+                mb: 0,
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
                 cursor: "pointer",
-                border: `1px solid ${themeColors.borderLight}`,
-                "&:hover": {
-                  opacity: 0.9,
-                },
+                "&:hover": { opacity: 0.9 },
               }}
             >
               <Box>
@@ -340,13 +310,10 @@ export default function IntersectionControls() {
                 </Typography>
               </Box>
               <KeyboardArrowDown sx={{ color: themeColors.textGray }} />
-            </Box>
+            </Card>
           );
         })}
       </Stack>
-
-      {/* --- BOTTOM NAVIGATION BAR --- */}
-      <NavBar currentStep={2} handleJsonButton={handleCopyJson} />
     </Box>
   );
 }

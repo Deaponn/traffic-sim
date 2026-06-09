@@ -1,40 +1,25 @@
-import { Box, Grid, Paper } from "@mui/material";
 import CommandControls from "../components/controls/CommandControls";
 import IntersectionCanvas from "../canvas/IntersectionCanvas";
+import CreatorLayout from "../components/CreatorLayout";
+import { useSimulationStore } from "../store/useSimulationStore";
 
 export default function Screen3CommandCreator() {
+  const { intersectionDescription, controllerType, commands } =
+    useSimulationStore();
+
+  const handleCopyPayload = () => {
+    const payload = { intersectionDescription, controllerType, commands };
+    navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+  };
+
   return (
-    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Grid container spacing={2} sx={{ flexGrow: 1, overflow: "hidden" }}>
-        <Grid size={{ xs: 12, md: 5, lg: 4 }} sx={{ height: "100%" }}>
-          <Paper
-            elevation={3}
-            sx={{
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-            }}
-          >
-            <CommandControls />
-          </Paper>
-        </Grid>
-        <Grid size={{ xs: 12, md: 7, lg: 8 }} sx={{ height: "100%" }}>
-          <Paper
-            elevation={3}
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              bgcolor: "#e0e0e0",
-              overflow: "hidden",
-            }}
-          >
-            <IntersectionCanvas mode="command" />
-          </Paper>
-        </Grid>
-      </Grid>
-    </Box>
+    <CreatorLayout
+      sidebarContent={<CommandControls />}
+      mainContent={<IntersectionCanvas mode="command" />}
+      currentStep={3}
+      onDownloadJson={handleCopyPayload}
+      sidebarSizes={{ xs: 12, md: 5, lg: 4 }}
+      mainSizes={{ xs: 12, md: 7, lg: 8 }}
+    />
   );
 }

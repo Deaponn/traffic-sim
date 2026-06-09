@@ -3,18 +3,8 @@ import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { useUIStore } from "../../store/useUIStore";
-
-const themeColors = {
-  bgApp: "#F5F3EB",
-  bgCard: "#EFEBE1",
-  bgLane: "#FAFAFA",
-  textGreen: "#5D8A66",
-  textGray: "#8A8A8A",
-  textDark: "#4A4A4A",
-  borderLight: "#E0DCD1",
-  circleUnchecked: "#DCD8CF",
-};
+import { useUIStore } from "../store/useUIStore";
+import { themeColors } from "../theme";
 
 interface INavBar {
   currentStep: number;
@@ -48,7 +38,7 @@ export default function NavBar({ currentStep, handleJsonButton }: INavBar) {
 
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button
-            onClick={handleJsonButton} // Maintaining functionality via mapped button
+            onClick={handleJsonButton}
             sx={{
               color: themeColors.textGreen,
               border: `1px solid ${themeColors.borderLight}`,
@@ -68,7 +58,7 @@ export default function NavBar({ currentStep, handleJsonButton }: INavBar) {
             variant="contained"
             sx={{
               bgcolor: themeColors.textGreen,
-              "&:hover": { bgcolor: "#4A7052" }, // Slightly darker on hover
+              "&:hover": { bgcolor: "#4A7052" },
               borderRadius: 6,
               textTransform: "none",
               px: 4,

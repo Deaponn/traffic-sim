@@ -4,6 +4,7 @@ import { Traffic, UploadFile, ArrowForward } from "@mui/icons-material";
 import { useUIStore } from "../store/useUIStore";
 import { useSimulationStore } from "../store/useSimulationStore";
 import { PRESETS } from "../presets/intersection";
+import Card from "../components/Card";
 
 export default function StartScreen() {
   const setStep = useUIStore((state) => state.setStep);
@@ -30,18 +31,7 @@ export default function StartScreen() {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     console.log("Placeholder: Loading data from file:", file.name);
-    // TODO: Implement FileReader logic to parse JSON
-    // const reader = new FileReader();
-    // reader.onload = (e) => {
-    //   const json = JSON.parse(e.target?.result as string);
-    //   ... populate store with json data ...
-    //   setStep(3);
-    // };
-    // reader.readAsText(file);
-
-    // Reset input so the same file can be selected again
     event.target.value = "";
   };
 
@@ -49,11 +39,13 @@ export default function StartScreen() {
     bgcolor: "#F4F1EC",
     borderRadius: 4,
     p: 3,
+    mb: 0, // Override default mb from ControlPanelCard
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
     textAlign: "left",
     transition: "transform 0.2s ease-in-out",
+    border: "none",
     "&:hover": { transform: "translateY(-4px)" },
     width: "100%",
   };
@@ -104,6 +96,7 @@ export default function StartScreen() {
             precision.
           </Typography>
         </Box>
+
         <Box
           sx={{
             display: "grid",
@@ -117,7 +110,7 @@ export default function StartScreen() {
               onClick={() => handleSelectPreset(name)}
               sx={{ borderRadius: 4 }}
             >
-              <Box sx={cardStyle}>
+              <Card sx={cardStyle}>
                 <Box
                   sx={{
                     bgcolor: iconBg,
@@ -160,11 +153,12 @@ export default function StartScreen() {
                 >
                   Select Template <ArrowForward fontSize="small" />
                 </Typography>
-              </Box>
+              </Card>
             </ButtonBase>
           ))}
+
           <ButtonBase onClick={triggerFileInput} sx={{ borderRadius: 4 }}>
-            <Box
+            <Card
               sx={{
                 ...cardStyle,
                 bgcolor: "transparent",
@@ -216,7 +210,7 @@ export default function StartScreen() {
                 style={{ display: "none" }}
                 onChange={handleFileUpload}
               />
-            </Box>
+            </Card>
           </ButtonBase>
         </Box>
       </Container>

@@ -109,7 +109,6 @@ export default function Screen4SimulationRunner() {
               mode="simulate"
               lightsState={currentSnapshot?.lights}
             />
-            {/* overlay the <CarNode> and <PedestrianNode> elements here in the next step */}
           </Paper>
         </Grid>
 
