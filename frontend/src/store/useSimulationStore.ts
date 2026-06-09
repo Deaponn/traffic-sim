@@ -15,7 +15,10 @@ interface SimulationState {
   commands: Command[];
   simulationOutput: SimulationOutput | null;
 
-  setIntersectionPreset: (preset: IntersectionDescription) => void;
+  setIntersectionPreset: (preset: {
+    intersectionDescription: IntersectionDescription;
+    commands: Command[];
+  }) => void;
   setLaneCount: (road: WorldDirection, count: number) => void;
   setLaneTurns: (
     road: WorldDirection,
@@ -44,7 +47,8 @@ export const useSimulationStore = create<SimulationState>((set) => ({
   commands: [],
   simulationOutput: null,
 
-  setIntersectionPreset: (preset) => set({ intersectionDescription: preset }),
+  setIntersectionPreset: ({ intersectionDescription, commands }) =>
+    set({ intersectionDescription, commands }),
 
   setLaneCount: (road, count) =>
     set((state) => {
@@ -53,7 +57,7 @@ export const useSimulationStore = create<SimulationState>((set) => ({
 
       if (count > currentLanes.length) {
         const addedLanes = Array(count - currentLanes.length).fill({
-          availableTurns: ["straightAhead"],
+          availableTurns: [],
         });
         newLanes = [...newLanes, ...addedLanes];
       } else if (count < currentLanes.length) {

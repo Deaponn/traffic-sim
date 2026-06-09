@@ -1,11 +1,8 @@
-import { Box, Grid, Paper, Button } from "@mui/material";
-import IntersectionControls from "../controls/IntersectionControls";
-import { useUIStore } from "../../store/useUIStore";
-import IntersectionCanvas from "../../canvas/IntersectionCanvas";
+import { Box, Grid, Paper } from "@mui/material";
+import IntersectionControls from "../components/controls/IntersectionControls";
+import IntersectionCanvas from "../canvas/IntersectionCanvas";
 
 export default function IntersectionCreator() {
-  const setStep = useUIStore((state) => state.setStep);
-
   return (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <Grid container spacing={2} sx={{ flexGrow: 1, overflow: "hidden" }}>
@@ -31,21 +28,13 @@ export default function IntersectionCreator() {
               alignItems: "center",
               justifyContent: "center",
               bgcolor: "#e0e0e0",
+              overflow: "hidden",
             }}
           >
             <IntersectionCanvas mode="edit" />
           </Paper>
         </Grid>
       </Grid>
-
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        <Button variant="outlined" onClick={() => setStep(1)}>
-          Back
-        </Button>
-        <Button variant="contained" color="primary" onClick={() => setStep(3)}>
-          Next: Add Commands
-        </Button>
-      </Box>
     </Box>
   );
 }

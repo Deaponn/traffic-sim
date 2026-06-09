@@ -1,10 +1,10 @@
 import { Box, Stepper, Step, StepLabel, Container, Paper } from "@mui/material";
 import { useUIStore } from "./store/useUIStore";
 
-import StartScreen from "./components/screens/Start";
-import IntersectionCreator from "./components/screens/IntersectionCreator";
-import CommandCreator from "./components/screens/CommandCreator";
-import Runner from "./components/screens/Runner";
+import StartScreen from "./pages/Start";
+import IntersectionCreator from "./pages/IntersectionCreator";
+import CommandCreator from "./pages/CommandCreator";
+import Runner from "./pages/Runner";
 
 const steps = [
   "Choose Preset",
@@ -38,10 +38,10 @@ export default function App() {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        bgcolor: "primary.light",
+        bgcolor: "#f5f5f5",
       }}
     >
-      <Paper elevation={2} sx={{ p: 3, mb: 2, borderRadius: 0 }}>
+      <Paper elevation={2} sx={{ p: 1, borderRadius: 0, zIndex: 1 }}>
         <Container maxWidth="lg">
           <Stepper activeStep={currentStep - 1} alternativeLabel>
             {steps.map((label) => (
@@ -53,7 +53,7 @@ export default function App() {
         </Container>
       </Paper>
 
-      <Box sx={{ flexGrow: 1, overflow: "hidden", p: 2 }}>{renderScreen()}</Box>
+      <Box sx={{ flexGrow: 1, overflow: "hidden" }}>{renderScreen()}</Box>
     </Box>
   );
 }

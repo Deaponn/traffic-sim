@@ -15,6 +15,8 @@ import {
   calculateOutputLanes,
   directionAngles,
 } from "../utils/geometry";
+import ActorsLayer from "./ActorsLayer";
+import { useAnimationStore } from "../store/useAnimationStore";
 import { worldDirections } from "../constants";
 
 interface CanvasProps {
@@ -29,7 +31,17 @@ export default function IntersectionCanvas({ mode, lightsState }: CanvasProps) {
   const intersectionDescription = useSimulationStore(
     (state) => state.intersectionDescription,
   );
+  const simulationOutput = useSimulationStore(
+    (state) => state.simulationOutput,
+  );
   const { selectedRoad, hoveredLaneIndex } = useUIStore();
+  const {
+    currentSnapshotIndex,
+    isPlaying,
+    playbackSpeed,
+    stepForward,
+    togglePlay,
+  } = useAnimationStore();
 
   useEffect(() => {
     const updateSize = () => {
@@ -90,6 +102,36 @@ export default function IntersectionCanvas({ mode, lightsState }: CanvasProps) {
             />
           </Group>
         </Layer>
+        {mode === "simulate" && (
+          <Layer>
+            <Group x={dimensions.width / 2} y={dimensions.height / 2}>
+              <ActorsLayer
+                prevSnapshot={
+                  currentSnapshotIndex > 0
+                    ? simulationOutput?.snapshots[currentSnapshotIndex - 1] ||
+                      null
+                    : null
+                }
+                currSnapshot={
+                  simulationOutput?.snapshots[currentSnapshotIndex] || null
+                }
+                isPlaying={isPlaying}
+                playbackSpeed={playbackSpeed}
+                onAnimationComplete={() => {
+                  const maxIndex =
+                    (simulationOutput?.snapshots.length || 1) - 1;
+                  if (
+                    useAnimationStore.getState().currentSnapshotIndex < maxIndex
+                  ) {
+                    stepForward(maxIndex);
+                  } else {
+                    togglePlay();
+                  }
+                }}
+              />
+            </Group>
+          </Layer>
+        )}
       </Stage>
     </div>
   );
