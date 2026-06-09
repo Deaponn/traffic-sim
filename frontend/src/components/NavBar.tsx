@@ -3,16 +3,26 @@ import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { useUIStore } from "../store/useUIStore";
 import { themeColors } from "../theme";
+import { useNavigate, useLocation } from "react-router-dom";
+
+const steps = ["/", "/create-intersection", "/commands", "/run"];
 
 interface INavBar {
-  currentStep: number;
   handleJsonButton: () => void;
 }
 
-export default function NavBar({ currentStep, handleJsonButton }: INavBar) {
-  const setStep = useUIStore((store) => store.setStep);
+export default function NavBar({ handleJsonButton }: INavBar) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentIndex = steps.indexOf(location.pathname);
+
+  const prevStep = currentIndex > 0 ? steps[currentIndex - 1] : steps[0];
+  const nextStep =
+    currentIndex < steps.length - 1
+      ? steps[currentIndex + 1]
+      : steps[steps.length - 1];
 
   return (
     <Box>
@@ -31,7 +41,8 @@ export default function NavBar({ currentStep, handleJsonButton }: INavBar) {
             textTransform: "none",
             fontSize: "1rem",
           }}
-          onClick={() => setStep(currentStep - 1)}
+          disabled={currentIndex <= 0}
+          onClick={() => navigate(prevStep)}
         >
           Back
         </Button>
@@ -65,7 +76,8 @@ export default function NavBar({ currentStep, handleJsonButton }: INavBar) {
               boxShadow: "none",
               fontSize: "1rem",
             }}
-            onClick={() => setStep(currentStep + 1)}
+            disabled={currentIndex === steps.length - 1}
+            onClick={() => navigate(nextStep)}
           >
             Next
           </Button>

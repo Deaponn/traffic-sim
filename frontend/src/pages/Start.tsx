@@ -1,13 +1,14 @@
 import React, { useRef } from "react";
 import { Box, Typography, Container, ButtonBase } from "@mui/material";
 import { Traffic, UploadFile, ArrowForward } from "@mui/icons-material";
-import { useUIStore } from "../store/useUIStore";
 import { useSimulationStore } from "../store/useSimulationStore";
 import { PRESETS } from "../presets/intersection";
 import Card from "../components/Card";
+import { useNavigate } from "react-router-dom";
 
 export default function StartScreen() {
-  const setStep = useUIStore((state) => state.setStep);
+  const navigate = useNavigate();
+
   const setIntersectionPreset = useSimulationStore(
     (state) => state.setIntersectionPreset,
   );
@@ -18,7 +19,7 @@ export default function StartScreen() {
     const preset = PRESETS.find((p) => p.name === presetName);
     if (preset) {
       setIntersectionPreset(preset);
-      setStep(3);
+      navigate("/create-intersection");
     } else {
       console.warn(`Preset ${presetName} not found in PRESETS`);
     }
@@ -39,7 +40,7 @@ export default function StartScreen() {
     bgcolor: "#F4F1EC",
     borderRadius: 4,
     p: 3,
-    mb: 0, // Override default mb from ControlPanelCard
+    mb: 0,
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",

@@ -11,12 +11,12 @@ import {
 } from "@mui/material";
 import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@mui/icons-material";
 import IntersectionCanvas from "../canvas/IntersectionCanvas";
-import { useUIStore } from "../store/useUIStore";
 import { useSimulationStore } from "../store/useSimulationStore";
 import { useAnimationStore } from "../store/useAnimationStore";
+import { useNavigate } from "react-router-dom";
 
 export default function Screen4SimulationRunner() {
-  const setStep = useUIStore((state) => state.setStep);
+  const navigate = useNavigate();
   const {
     simulationOutput,
     intersectionDescription,
@@ -205,7 +205,7 @@ export default function Screen4SimulationRunner() {
       </Grid>
 
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        <Button variant="outlined" onClick={() => setStep(3)}>
+        <Button variant="outlined" onClick={() => navigate('/commands')}>
           Back to Commands
         </Button>
       </Box>

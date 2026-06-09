@@ -3,7 +3,7 @@ import { Box, Grid, Paper } from "@mui/material";
 import NavBar from "./NavBar";
 import { themeColors } from "../theme";
 
-interface WorkspaceLayoutProps {
+interface CreatorLayoutProps {
   sidebarContent: ReactNode;
   mainContent: ReactNode;
   currentStep: number;
@@ -12,14 +12,13 @@ interface WorkspaceLayoutProps {
   mainSizes?: object;
 }
 
-export default function WorkspaceLayout({
+export default function CreatorLayout({
   sidebarContent,
   mainContent,
-  currentStep,
   onDownloadJson,
   sidebarSizes = { xs: 12, md: 4 },
   mainSizes = { xs: 12, md: 8 },
-}: WorkspaceLayoutProps) {
+}: CreatorLayoutProps) {
   return (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <Grid container spacing={2} sx={{ flexGrow: 1, overflow: "hidden" }}>
@@ -38,10 +37,7 @@ export default function WorkspaceLayout({
               {sidebarContent}
             </Box>
             <Box sx={{ p: { xs: 1, md: 2 }, pt: 0 }}>
-              <NavBar
-                currentStep={currentStep}
-                handleJsonButton={onDownloadJson}
-              />
+              <NavBar handleJsonButton={onDownloadJson} />
             </Box>
           </Paper>
         </Grid>
