@@ -43,7 +43,7 @@ export const useSimulationStore = create<SimulationState>((set) => ({
     south: createDefaultRoad(),
     west: createDefaultRoad(),
   },
-  controllerType: null,
+  controllerType: "simple-controller",
   commands: [],
   simulationOutput: null,
 
@@ -57,7 +57,7 @@ export const useSimulationStore = create<SimulationState>((set) => ({
 
       if (count > currentLanes.length) {
         const addedLanes = Array(count - currentLanes.length).fill({
-          availableTurns: ["straightAhead"],
+          availableTurns: [],
         });
         newLanes = [...newLanes, ...addedLanes];
       } else if (count < currentLanes.length) {

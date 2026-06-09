@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Grid,
-  Paper,
-  Typography,
-  Button,
-  IconButton,
-  Slider,
-  Stack,
-} from "@mui/material";
-import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@mui/icons-material";
+import { Box, Grid, Paper, Typography, Button } from "@mui/material";
+import { SkipNext, SkipPrevious } from "@mui/icons-material";
 import IntersectionCanvas from "../../canvas/IntersectionCanvas";
 import { useUIStore } from "../../store/useUIStore";
 import { useSimulationStore } from "../../store/useSimulationStore";
@@ -17,16 +8,53 @@ import { useAnimationStore } from "../../store/useAnimationStore";
 
 export default function Screen4SimulationRunner() {
   const setStep = useUIStore((state) => state.setStep);
-  const { simulationOutput } = useSimulationStore();
   const {
-    isPlaying,
-    togglePlay,
-    currentSnapshotIndex,
-    stepForward,
-    stepBackward,
-    setPlaybackSpeed,
-    playbackSpeed,
-  } = useAnimationStore();
+    simulationOutput,
+    intersectionDescription,
+    controllerType,
+    commands,
+    setSimulationOutput,
+  } = useSimulationStore();
+  const { currentSnapshotIndex, stepForward, stepBackward } =
+    useAnimationStore();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const handleRunSimulation = async () => {
+      setIsLoading(true);
+      try {
+        const payload = {
+          intersectionDescription,
+          controllerType,
+          commands,
+        };
+
+        const response = await fetch("/api/simulate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        setSimulationOutput(data);
+      } catch (error) {
+        console.error("Failed to run simulation:", error);
+        alert("Error running simulation. Check the console.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    handleRunSimulation();
+  }, [commands, controllerType, intersectionDescription, setSimulationOutput]);
 
   const [serverLog, setServerLog] = useState<string>(
     "Initializing simulation...",
@@ -34,8 +62,10 @@ export default function Screen4SimulationRunner() {
 
   useEffect(() => {
     async function fetchSimulationResult() {
-        const result = await Promise.resolve("Simulation output received. Ready to play.");
-        setServerLog(result);
+      const result = await Promise.resolve(
+        "Simulation output received. Ready to step.",
+      );
+      setServerLog(result);
     }
 
     void fetchSimulationResult();
@@ -43,6 +73,8 @@ export default function Screen4SimulationRunner() {
 
   const maxIndex = simulationOutput ? simulationOutput.snapshots.length - 1 : 0;
   const currentSnapshot = simulationOutput?.snapshots[currentSnapshotIndex];
+
+  if (isLoading) return <>loading...</>;
 
   return (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -61,7 +93,6 @@ export default function Screen4SimulationRunner() {
               mode="simulate"
               lightsState={currentSnapshot?.lights}
             />
-            {/* overlay the <CarNode> and <PedestrianNode> elements here in the next step */}
           </Paper>
         </Grid>
 
@@ -84,56 +115,38 @@ export default function Screen4SimulationRunner() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 1,
-                mb: 2,
+                gap: 2,
+                mb: 4,
               }}
             >
-              <IconButton
+              <Button
+                variant="contained"
+                startIcon={<SkipPrevious />}
                 onClick={stepBackward}
                 disabled={currentSnapshotIndex === 0}
               >
-                <SkipPrevious />
-              </IconButton>
-              <IconButton
-                color="primary"
-                onClick={togglePlay}
-                sx={{ transform: "scale(1.5)", mx: 2 }}
-              >
-                {isPlaying ? <Pause /> : <PlayArrow />}
-              </IconButton>
-              <IconButton
+                Previous
+              </Button>
+
+              <Button
+                variant="contained"
+                endIcon={<SkipNext />}
                 onClick={() => stepForward(maxIndex)}
                 disabled={currentSnapshotIndex === maxIndex}
               >
-                <SkipNext />
-              </IconButton>
+                Next
+              </Button>
             </Box>
 
-            <Stack
-              spacing={2}
-              direction="row"
-              sx={{ mb: 2, alignItems: "center" }}
-            >
-              <Typography variant="body2">Speed:</Typography>
-              <Slider
-                value={playbackSpeed}
-                min={0.5}
-                max={3}
-                step={0.5}
-                onChange={(_, val) => setPlaybackSpeed(val as number)}
-                valueLabelDisplay="auto"
-              />
-            </Stack>
-
             <Typography
-              variant="caption"
+              variant="h6"
               sx={{ textAlign: "center", display: "block", mb: 2 }}
             >
               Step {currentSnapshotIndex + 1} / {maxIndex + 1}
             </Typography>
 
             <Typography variant="subtitle2" gutterBottom>
-              Server Output (Current Snapshot)
+              Server output (current snapshot)
             </Typography>
             <Box
               sx={{
