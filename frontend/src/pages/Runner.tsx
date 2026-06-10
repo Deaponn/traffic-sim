@@ -9,7 +9,13 @@ import {
   Slider,
   Stack,
 } from "@mui/material";
-import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@mui/icons-material";
+import {
+  PlayArrow,
+  Pause,
+  SkipNext,
+  SkipPrevious,
+  ArrowBack,
+} from "@mui/icons-material";
 import IntersectionCanvas from "../canvas/IntersectionCanvas";
 import { useSimulationStore } from "../store/useSimulationStore";
 import { useAnimationStore } from "../store/useAnimationStore";
@@ -46,7 +52,7 @@ export default function Screen4SimulationRunner() {
           commands,
         };
 
-        const response = await fetch("/api/simulate", {
+        const response = await fetch("/api/api/simulate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -203,10 +209,17 @@ export default function Screen4SimulationRunner() {
           </Paper>
         </Grid>
       </Grid>
-
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        <Button variant="outlined" onClick={() => navigate('/commands')}>
-          Back to Commands
+      <Box sx={{ display: "flex", justifyContent: "flex-start", margin: 2 }}>
+        <Button
+          startIcon={<ArrowBack />}
+          sx={{
+            color: "#4A4A4A",
+            textTransform: "none",
+            fontSize: "1rem",
+          }}
+          onClick={() => navigate("/commands")}
+        >
+          Back
         </Button>
       </Box>
     </Box>

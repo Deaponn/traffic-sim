@@ -42,6 +42,8 @@ export default function IntersectionCanvas({ mode, lightsState }: CanvasProps) {
     stepForward,
     togglePlay,
   } = useAnimationStore();
+  const currentSnapshot =
+    simulationOutput?.snapshots[currentSnapshotIndex] || null;
 
   useEffect(() => {
     const updateSize = () => {
@@ -107,13 +109,15 @@ export default function IntersectionCanvas({ mode, lightsState }: CanvasProps) {
             <Group x={dimensions.width / 2} y={dimensions.height / 2}>
               <ActorsLayer
                 prevSnapshot={
-                  currentSnapshotIndex > 0
-                    ? simulationOutput?.snapshots[currentSnapshotIndex - 1] ||
-                      null
-                    : null
+                  isPlaying
+                    ? simulationOutput?.snapshots[currentSnapshotIndex] || null
+                    : currentSnapshot || null
                 }
                 currSnapshot={
-                  simulationOutput?.snapshots[currentSnapshotIndex] || null
+                  isPlaying
+                    ? simulationOutput?.snapshots[currentSnapshotIndex + 1] ||
+                      null
+                    : currentSnapshot || null
                 }
                 isPlaying={isPlaying}
                 playbackSpeed={playbackSpeed}
