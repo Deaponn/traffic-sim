@@ -25,7 +25,7 @@ const steps = [
   { label: "Main Menu", path: "/" },
   { label: "Crossroad Builder", path: "/create-intersection" },
   { label: "Actions Builder", path: "/commands" },
-  { label: "Run Simulation", path: "/run" },
+  { label: "Results", path: "/run" },
 ];
 
 interface ProtectedRouteProps {
