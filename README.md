@@ -66,3 +66,31 @@ Helps to render current user settings and the result from the server.
 
 **Infrastructure Docker & Nginx:**
 Containerized for easy deployment and local development. Nginx proxies `/api` requests to the backend while serving the frontend.
+
+---
+
+## 📺 Application Views
+
+The application provides an intuitive interface for designing and simulating traffic intersections. Below are screenshots of each main view:
+
+### Main Menu
+Starting point of the application where users can choose between creating a new intersection simulation or accessing other features.
+
+
+### Crossroad Builder
+Visual editor for designing custom intersections. Users can configure roads, lanes, and define turn restrictions to prevent collisions.
+
+
+### Action Builder
+Interface for creating and configuring traffic simulation commands. Users define vehicle and pedestrian actions to simulate real-world traffic scenarios.
+
+
+### Results
+Playback and visualization of the simulation results. Shows the real-time movement of vehicles and pedestrians through the configured intersection.
+
+
+---
+
+## 📊 Analytics
+
+This application includes **Google Analytics** integration for tracking user interactions and gathering insights on application usage patterns.
