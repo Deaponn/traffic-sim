@@ -1,5 +1,7 @@
 import { type ReactNode } from "react";
-import { Box, Stepper, Step, StepLabel, Container, Paper } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import TrafficIcon from "@mui/icons-material/Traffic";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
   BrowserRouter,
   Routes,
@@ -17,6 +19,7 @@ import CommandCreator from "./pages/CommandCreator";
 import Runner from "./pages/Runner";
 import Login from "./pages/Login";
 import LoginButton from "./components/LoginButton";
+import { themeColors } from "./theme";
 
 const steps = [
   { label: "Choose Preset", path: "/" },
@@ -47,48 +50,122 @@ function AppLayout() {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        bgcolor: "#f5f5f5",
+        bgcolor: themeColors.bgApp,
       }}
     >
       {!isLoginPage && (
-        <Paper
-          elevation={2}
+        <Box
           sx={{
-            p: 1,
-            borderRadius: 0,
-            zIndex: 1,
+            display: "flex",
+            alignItems: "center",
+            px: 4,
+            py: 2,
+            bgcolor: themeColors.bgApp,
             position: "relative",
+            justifyContent: "center",
           }}
         >
-          <Container maxWidth="lg">
-            <Stepper
-              activeStep={activeStep >= 0 ? activeStep : 0}
-              alternativeLabel
-            >
-              {steps.map((step) => (
-                <Step key={step.label}>
-                  <StepLabel>{step.label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-          </Container>
           <Box
             sx={{
               position: "absolute",
-              right: 24,
-              top: "50%",
-              transform: "translateY(-50%)",
+              left: 32,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
             }}
           >
-            <LoginButton />
+            <TrafficIcon sx={{ color: themeColors.textGreen }} />
+            <Typography
+              variant="h6"
+              sx={{
+                color: themeColors.textGreen,
+                fontFamily: "serif",
+                fontWeight: 600,
+                fontSize: "1.2rem",
+              }}
+            >
+              Traffic Sim
+            </Typography>
           </Box>
-        </Paper>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            {steps.map(({ label }, index) => {
+              const stepNum = index;
+              const isActive = activeStep === stepNum;
+
+              return (
+                <Box
+                  key={label}
+                  sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.75rem",
+                        fontWeight: "bold",
+                        ...(isActive
+                          ? {
+                              bgcolor: themeColors.textGreen,
+                              color: "#fff",
+                            }
+                          : {
+                              bgcolor: "transparent",
+                              color: themeColors.textGray,
+                              border: `2px solid ${themeColors.circleUnchecked}`,
+                            }),
+                      }}
+                    >
+                      {stepNum + 1}
+                    </Box>
+
+                    <Box
+                      sx={{
+                        borderBottom: isActive
+                          ? `2px solid ${themeColors.textGreen}`
+                          : "2px solid transparent",
+                        pb: 0.5,
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "0.875rem",
+                          fontWeight: 500,
+                          color: isActive
+                            ? themeColors.textGreen
+                            : themeColors.textGray,
+                        }}
+                      >
+                        {label}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {index < steps.length - 1 && (
+                    <ChevronRightIcon
+                      sx={{
+                        color: themeColors.circleUnchecked,
+                        fontSize: "1rem",
+                      }}
+                    />
+                  )}
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
       )}
 
       <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
         <Routes>
           <Route path="/login" element={<Login />} />
-
           <Route path="/" element={<StartScreen />} />
           <Route
             path="/create-intersection"
@@ -114,7 +191,6 @@ function AppLayout() {
               </ProtectedRoute>
             }
           />
-
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Box>
