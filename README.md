@@ -2,6 +2,12 @@
 
 A full-stack, highly interactive traffic intersection simulation engine built with **TypeScript**. This project allows users to design complex intersections, configure lane turns, and simulate vehicle and pedestrian traffic. It features both a CLI for automated batch processing and a rich Web GUI for real-time visualization.
 
+## 🚀 Deployment
+
+The application is deployed and publicly accessible using **Cloudflare Tunnels**.
+
+🔗 **Live App:** [Traffic Sim](https://traffic-sim.piechnik.com.pl/)
+
 ## 🌟 Key Features
 * **Custom Intersection Engine:** Define 4-way intersections with variable lane counts and dynamic turn restrictions (preventing collidable trajectories).
 * **Visual Editor & Playback:** A wizard-based React frontend utilizing `react-konva` to construct simulations and render playback of the server's output state.
@@ -100,3 +106,8 @@ Playback and visualization of the simulation results. Shows the real-time moveme
 This application includes **Google Analytics** integration for tracking user interactions and gathering insights on application usage patterns.
 
 <img width="1512" height="824" alt="Screenshot 2026-06-10 at 03 12 03" src="https://github.com/user-attachments/assets/2ccd374a-a851-4979-85bc-0515f4571bb9" />
+
+This application includes **Hotjar** integration for tracking user interactions, analyzing behavior using heatmaps, and gathering insights on application usage patterns.
+
+<img width="1920" height="877" alt="Screenshot of Hotjar Heatmap" src="https://github.com/user-attachments/assets/40771a12-cdef-4d88-b835-85895e4001ae" />
+
