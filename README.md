@@ -76,21 +76,27 @@ The application provides an intuitive interface for designing and simulating tra
 ### Main Menu
 Starting point of the application where users can choose between creating a new intersection simulation or accessing other features.
 
+<img width="1512" height="821" alt="Screenshot 2026-06-10 at 03 43 37" src="https://github.com/user-attachments/assets/2a9b1178-a763-4b7d-b327-f90af9b1cc64" />
 
 ### Crossroad Builder
 Visual editor for designing custom intersections. Users can configure roads, lanes, and define turn restrictions to prevent collisions.
 
+<img width="1512" height="824" alt="Screenshot 2026-06-10 at 03 43 19" src="https://github.com/user-attachments/assets/2ff44c7c-f7fb-4fc7-b47d-92c548601714" />
 
 ### Action Builder
 Interface for creating and configuring traffic simulation commands. Users define vehicle and pedestrian actions to simulate real-world traffic scenarios.
 
+<img width="1512" height="824" alt="Screenshot 2026-06-10 at 03 43 07" src="https://github.com/user-attachments/assets/ff14b68f-01e7-4af8-8347-092cdc27b419" />
 
 ### Results
 Playback and visualization of the simulation results. Shows the real-time movement of vehicles and pedestrians through the configured intersection.
 
+<img width="1512" height="825" alt="Screenshot 2026-06-10 at 03 42 52" src="https://github.com/user-attachments/assets/d552267a-52f4-435d-9be8-22405ea930bc" />
 
 ---
 
 ## 📊 Analytics
 
 This application includes **Google Analytics** integration for tracking user interactions and gathering insights on application usage patterns.
+
+<img width="1512" height="824" alt="Screenshot 2026-06-10 at 03 12 03" src="https://github.com/user-attachments/assets/2ccd374a-a851-4979-85bc-0515f4571bb9" />
