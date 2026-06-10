@@ -129,7 +129,7 @@ function AppLayout() {
                         borderBottom: isActive
                           ? `2px solid ${themeColors.textGreen}`
                           : "2px solid transparent",
-                        pb: 0.5,
+                        pb: isActive ? 0.5 : 0,
                         display: "flex",
                         alignItems: "center",
                       }}
@@ -159,6 +159,17 @@ function AppLayout() {
                 </Box>
               );
             })}
+          </Box>
+          <Box
+            sx={{
+              position: "absolute",
+              right: 32,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <LoginButton />
           </Box>
         </Box>
       )}

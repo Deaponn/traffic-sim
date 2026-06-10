@@ -25,7 +25,7 @@ export default function LoginButton() {
         </Typography>
         <Button
           variant="outlined"
-          color="inherit"
+          color="primary"
           size="small"
           onClick={handleLogout}
         >
