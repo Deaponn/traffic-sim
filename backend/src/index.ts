@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.post(
-    '/simulate',
+    '/api/simulate',
     validate(SimulationDescriptionSchema),
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     (req: Request<{}, SimulationOutput, SimulationDescription>, res: Response<SimulationOutput>) => {

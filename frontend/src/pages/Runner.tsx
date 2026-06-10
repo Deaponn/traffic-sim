@@ -9,7 +9,13 @@ import {
   Slider,
   Stack,
 } from "@mui/material";
-import { PlayArrow, Pause, SkipNext, SkipPrevious } from "@mui/icons-material";
+import {
+  PlayArrow,
+  Pause,
+  SkipNext,
+  SkipPrevious,
+  ArrowBack,
+} from "@mui/icons-material";
 import IntersectionCanvas from "../canvas/IntersectionCanvas";
 import { useUIStore } from "../store/useUIStore";
 import { useSimulationStore } from "../store/useSimulationStore";
@@ -205,9 +211,17 @@ export default function Screen4SimulationRunner() {
         </Grid>
       </Grid>
 
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        <Button variant="outlined" onClick={() => setStep(3)}>
-          Back to Commands
+      <Box sx={{ display: "flex", justifyContent: "flex-start", mt: 2 }}>
+        <Button
+          startIcon={<ArrowBack />}
+          sx={{
+            color: "#4A4A4A",
+            textTransform: "none",
+            fontSize: "1rem",
+          }}
+          onClick={() => setStep(3)}
+        >
+          Back
         </Button>
       </Box>
     </Box>
