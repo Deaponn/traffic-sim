@@ -22,10 +22,10 @@ import LoginButton from "./components/LoginButton";
 import { themeColors } from "./theme";
 
 const steps = [
-  { label: "Choose Preset", path: "/" },
-  { label: "Design Intersection", path: "/create-intersection" },
-  { label: "Configure Commands", path: "/commands" },
-  { label: "Run Simulation", path: "/run" },
+  { label: "Main Menu", path: "/" },
+  { label: "Crossroad Builder", path: "/create-intersection" },
+  { label: "Actions Builder", path: "/commands" },
+  { label: "Results", path: "/run" },
 ];
 
 interface ProtectedRouteProps {
