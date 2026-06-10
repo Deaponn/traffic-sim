@@ -17,12 +17,12 @@ import {
   ArrowBack,
 } from "@mui/icons-material";
 import IntersectionCanvas from "../canvas/IntersectionCanvas";
-import { useUIStore } from "../store/useUIStore";
 import { useSimulationStore } from "../store/useSimulationStore";
 import { useAnimationStore } from "../store/useAnimationStore";
+import { useNavigate } from "react-router-dom";
 
 export default function Screen4SimulationRunner() {
-  const setStep = useUIStore((state) => state.setStep);
+  const navigate = useNavigate();
   const {
     simulationOutput,
     intersectionDescription,
@@ -52,7 +52,7 @@ export default function Screen4SimulationRunner() {
           commands,
         };
 
-        const response = await fetch("/api/simulate", {
+        const response = await fetch("/api/api/simulate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -115,7 +115,6 @@ export default function Screen4SimulationRunner() {
               mode="simulate"
               lightsState={currentSnapshot?.lights}
             />
-            {/* overlay the <CarNode> and <PedestrianNode> elements here in the next step */}
           </Paper>
         </Grid>
 
@@ -210,8 +209,7 @@ export default function Screen4SimulationRunner() {
           </Paper>
         </Grid>
       </Grid>
-
-      <Box sx={{ display: "flex", justifyContent: "flex-start", mt: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-start", margin: 2 }}>
         <Button
           startIcon={<ArrowBack />}
           sx={{
@@ -219,7 +217,7 @@ export default function Screen4SimulationRunner() {
             textTransform: "none",
             fontSize: "1rem",
           }}
-          onClick={() => setStep(3)}
+          onClick={() => navigate("/commands")}
         >
           Back
         </Button>

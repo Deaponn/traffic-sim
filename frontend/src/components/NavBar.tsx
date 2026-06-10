@@ -3,26 +3,26 @@ import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { useUIStore } from "../../store/useUIStore";
+import { themeColors } from "../theme";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const themeColors = {
-  bgApp: "#F5F3EB",
-  bgCard: "#EFEBE1",
-  bgLane: "#FAFAFA",
-  textGreen: "#5D8A66",
-  textGray: "#8A8A8A",
-  textDark: "#4A4A4A",
-  borderLight: "#E0DCD1",
-  circleUnchecked: "#DCD8CF",
-};
+const steps = ["/", "/create-intersection", "/commands", "/run"];
 
 interface INavBar {
-  currentStep: number;
   handleJsonButton: () => void;
 }
 
-export default function NavBar({ currentStep, handleJsonButton }: INavBar) {
-  const setStep = useUIStore((store) => store.setStep);
+export default function NavBar({ handleJsonButton }: INavBar) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentIndex = steps.indexOf(location.pathname);
+
+  const prevStep = currentIndex > 0 ? steps[currentIndex - 1] : steps[0];
+  const nextStep =
+    currentIndex < steps.length - 1
+      ? steps[currentIndex + 1]
+      : steps[steps.length - 1];
 
   return (
     <Box>
@@ -41,14 +41,15 @@ export default function NavBar({ currentStep, handleJsonButton }: INavBar) {
             textTransform: "none",
             fontSize: "1rem",
           }}
-          onClick={() => setStep(currentStep - 1)}
+          disabled={currentIndex <= 0}
+          onClick={() => navigate(prevStep)}
         >
           Back
         </Button>
 
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button
-            onClick={handleJsonButton} // Maintaining functionality via mapped button
+            onClick={handleJsonButton}
             sx={{
               color: themeColors.textGreen,
               border: `1px solid ${themeColors.borderLight}`,
@@ -68,14 +69,15 @@ export default function NavBar({ currentStep, handleJsonButton }: INavBar) {
             variant="contained"
             sx={{
               bgcolor: themeColors.textGreen,
-              "&:hover": { bgcolor: "#4A7052" }, // Slightly darker on hover
+              "&:hover": { bgcolor: "#4A7052" },
               borderRadius: 6,
               textTransform: "none",
               px: 4,
               boxShadow: "none",
               fontSize: "1rem",
             }}
-            onClick={() => setStep(currentStep + 1)}
+            disabled={currentIndex === steps.length - 1}
+            onClick={() => navigate(nextStep)}
           >
             Next
           </Button>

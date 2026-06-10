@@ -28,36 +28,20 @@ import type {
   WorldDirection,
   ControllerTypes,
   RelativeDirection,
-  // Command,
 } from "../../types/index";
 import { worldDirections } from "../../constants";
-import NavBar from "./NavBar";
+import { themeColors } from "../../theme";
+import Card from "../Card";
 
 // Helper to calculate end road based on start road and relative turn
-const calculateEndRoad = (
-  start: WorldDirection,
-  turn: RelativeDirection,
-): WorldDirection => {
-  const startIdx = worldDirections.indexOf(start);
-  if (turn === "right")
-    return worldDirections[(startIdx + 1) % 4] as WorldDirection;
-  if (turn === "straightAhead")
-    return worldDirections[(startIdx + 2) % 4] as WorldDirection;
-  if (turn === "left")
-    return worldDirections[(startIdx + 3) % 4] as WorldDirection;
-  return "south";
-};
-
-// Theme colors to match screenshot
-const themeColors = {
-  bg: "#f5f3ec",
-  bgCard: "#efebe1",
-  cardBorder: "#e0dcd1",
-  textMain: "#455a4d",
-  textGreen: "#518263",
-  buttonGreen: "#4d7c5b",
-  toggleActiveBg: "#7ba586",
-  toggleInactiveBg: "#fcfcfa",
+const worldAndRelativeToWorldDirection: Record<
+  WorldDirection,
+  Record<RelativeDirection, WorldDirection>
+> = {
+  north: { right: "west", left: "east", straightAhead: "south" },
+  east: { right: "north", left: "south", straightAhead: "west" },
+  south: { right: "east", left: "west", straightAhead: "north" },
+  west: { right: "south", left: "north", straightAhead: "east" },
 };
 
 export default function CommandControls() {
@@ -89,7 +73,6 @@ export default function CommandControls() {
 
   useEffect(() => {
     if (!vehicleLaneStr) return;
-
     const [startRoad, laneStr] = vehicleLaneStr.split("-") as [
       WorldDirection,
       string,
@@ -98,16 +81,13 @@ export default function CommandControls() {
     const availableTurns =
       intersectionDescription[startRoad]?.lanes[laneIdx]?.availableTurns || [];
 
-    // Order of priority for "leftmost"
     const turnOrder: RelativeDirection[] = ["left", "straightAhead", "right"];
     const leftmostTurn = turnOrder.find((turn) =>
       availableTurns.includes(turn),
     );
 
-    if (leftmostTurn) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setVehicleTurn(leftmostTurn);
-    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (leftmostTurn) setVehicleTurn(leftmostTurn);
   }, [vehicleLaneStr, intersectionDescription]);
 
   const handleAddVehicle = () => {
@@ -116,9 +96,9 @@ export default function CommandControls() {
       string,
     ];
     const laneIdx = parseInt(laneStr);
-    const endRoad = calculateEndRoad(startRoad, vehicleTurn);
-
+    const endRoad = worldAndRelativeToWorldDirection[startRoad][vehicleTurn];
     const vehicleCount = commands.filter((c) => c.type === "addVehicle").length;
+
     addCommand({
       type: "addVehicle",
       vehicleId: `vehicle${vehicleCount + 1}`,
@@ -138,16 +118,8 @@ export default function CommandControls() {
     });
   };
 
-  const handleAddStep = () => {
-    addCommand({ type: "step" });
-  };
+  const handleAddStep = () => addCommand({ type: "step" });
 
-  const handleCopyPayload = () => {
-    const payload = { intersectionDescription, controllerType, commands };
-    navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
-  };
-
-  // Generate options for "Starting Lane" dropdown
   const laneOptions = worldDirections.flatMap(
     (road) =>
       intersectionDescription[road]?.lanes.map((_, idx) => ({
@@ -161,21 +133,13 @@ export default function CommandControls() {
     label: string;
     icon: JSX.Element;
   }[] = [
-    {
-      value: "left",
-      label: "Left",
-      icon: <TurnLeft fontSize="small" />,
-    },
+    { value: "left", label: "Left", icon: <TurnLeft fontSize="small" /> },
     {
       value: "straightAhead",
       label: "Straight",
       icon: <ArrowUpward fontSize="small" />,
     },
-    {
-      value: "right",
-      label: "Right",
-      icon: <TurnRight fontSize="small" />,
-    },
+    { value: "right", label: "Right", icon: <TurnRight fontSize="small" /> },
   ];
 
   const pedButtons: {
@@ -196,17 +160,8 @@ export default function CommandControls() {
   ];
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        bgcolor: themeColors.bg,
-        p: 2,
-        overflowY: "auto",
-      }}
-    >
-      {/* Hidden Controller Type Select (retained functionality) */}
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      {/* Hidden Controller Type Select */}
       <Box sx={{ display: "none" }}>
         <Select
           value={controllerType || ""}
@@ -217,15 +172,7 @@ export default function CommandControls() {
       </Box>
 
       {/* --- ADD VEHICLE SECTION --- */}
-      <Box
-        sx={{
-          border: `1px solid ${themeColors.cardBorder}`,
-          backgroundColor: themeColors.bgCard,
-          borderRadius: 3,
-          p: 2,
-          mb: 2,
-        }}
-      >
+      <Card>
         <Box
           sx={{
             display: "flex",
@@ -267,7 +214,6 @@ export default function CommandControls() {
         </Typography>
         <Box sx={{ display: "flex", gap: 1, mb: 3 }}>
           {vehicleButtons.map((btn) => {
-            // Determine if the button should be disabled based on available turns for the selected lane
             const [startRoad, laneStr] = vehicleLaneStr.split("-") as [
               WorldDirection,
               string,
@@ -294,11 +240,7 @@ export default function CommandControls() {
                     vehicleTurn === btn.value
                       ? themeColors.toggleActiveBg
                       : themeColors.toggleInactiveBg,
-                  border: `1px solid ${
-                    vehicleTurn === btn.value
-                      ? themeColors.toggleActiveBg
-                      : themeColors.cardBorder
-                  }`,
+                  border: `1px solid ${vehicleTurn === btn.value ? themeColors.toggleActiveBg : themeColors.borderLight}`,
                   borderRadius: 2,
                   py: 1,
                   "&:hover": {
@@ -307,10 +249,9 @@ export default function CommandControls() {
                         ? themeColors.buttonGreen
                         : "#f0efe9",
                   },
-                  // Add specific styling for the disabled state
                   "&.Mui-disabled": {
-                    bgcolor: "rgba(0, 0, 0, 0.05)",
-                    color: "rgba(0, 0, 0, 0.26)",
+                    bgcolor: "rgba(0,0,0,0.05)",
+                    color: "rgba(0,0,0,0.26)",
                     borderColor: "transparent",
                   },
                 }}
@@ -342,18 +283,8 @@ export default function CommandControls() {
         >
           Add to Sequence
         </Button>
-      </Box>
-
-      {/* --- ADD PEDESTRIAN SECTION --- */}
-      <Box
-        sx={{
-          border: `1px solid ${themeColors.cardBorder}`,
-          borderRadius: 3,
-          p: 2,
-          mb: 3,
-          backgroundColor: themeColors.bgCard,
-        }}
-      >
+      </Card>
+      <Card sx={{ mb: 3 }}>
         <Box
           sx={{
             display: "flex",
@@ -409,7 +340,7 @@ export default function CommandControls() {
                   pedDirection === btn.value
                     ? themeColors.toggleActiveBg
                     : themeColors.toggleInactiveBg,
-                border: `1px solid ${pedDirection === btn.value ? themeColors.toggleActiveBg : themeColors.cardBorder}`,
+                border: `1px solid ${pedDirection === btn.value ? themeColors.toggleActiveBg : themeColors.borderLight}`,
                 borderRadius: 2,
                 py: 1,
                 "&:hover": {
@@ -446,9 +377,8 @@ export default function CommandControls() {
         >
           Add to Sequence
         </Button>
-      </Box>
+      </Card>
 
-      {/* --- ADD STEP BUTTON --- */}
       <Button
         fullWidth
         variant="contained"
@@ -467,12 +397,18 @@ export default function CommandControls() {
         Add Step
       </Button>
 
-      {/* --- BOTTOM ACTION BAR --- */}
-      <NavBar currentStep={3} handleJsonButton={handleCopyPayload} />
-
-      {/* Existing Command List (retained for functional parity, visually separated) */}
       <Box
-        sx={{ pt: 2, position: 'fixed', right: 20, top: 0, marginTop: 10, width: 350, height: 250, zIndex: 1, overflow: 'scroll' }}
+        sx={{
+          pt: 2,
+          position: "fixed",
+          right: 20,
+          top: 0,
+          marginTop: 10,
+          width: 350,
+          height: 250,
+          zIndex: 1,
+          overflow: "scroll",
+        }}
       >
         <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
           Command Sequence ({commands.length})
@@ -483,7 +419,7 @@ export default function CommandControls() {
             flexGrow: 1,
             bgcolor: themeColors.toggleInactiveBg,
             borderRadius: 2,
-            border: `1px solid ${themeColors.cardBorder}`,
+            border: `1px solid ${themeColors.borderLight}`,
             overflowY: "auto",
           }}
         >

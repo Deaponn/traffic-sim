@@ -1,8 +1,13 @@
+import type { JSX } from "react";
 import type {
   Command,
+  ControllerTypes,
   IntersectionDescription,
   RoadDescription,
 } from "../types/index";
+import Grid4x4 from "@mui/icons-material/Grid4x4";
+import AltRoute from "@mui/icons-material/AltRoute";
+import Balance from "@mui/icons-material/Balance";
 
 const standardRoad: RoadDescription = {
   lanes: [
@@ -11,25 +16,29 @@ const standardRoad: RoadDescription = {
   ],
 };
 
-export const PRESETS: Record<
-  string,
+export const PRESETS: {
+  name: string;
+  description: string;
+  icon: JSX.Element;
+  iconBg: string;
+  linkColor: string;
+  intersectionDescription: IntersectionDescription;
+  controller: ControllerTypes;
+  commands: Command[];
+}[] = [
   {
-    name: string;
-    description: string;
-    intersectionDescription: IntersectionDescription;
-    commands: Command[];
-  }
-> = {
-  "standard-4-way": {
-    name: "Standard 4-Way",
-    description:
-      "Two lanes on every side. Left lane turns left/straight, right lane turns straight/right.",
+    name: "Standard Intersection",
+    description: "Traffic lights change every 3 simulation steps.",
+    icon: <Grid4x4 sx={{ color: "#3e3b35" }} />,
+    iconBg: "#EAE5D9",
+    linkColor: "#7A756D",
     intersectionDescription: {
       north: standardRoad,
       east: standardRoad,
       south: standardRoad,
       west: standardRoad,
     },
+    controller: "simple-controller",
     commands: [
       {
         type: "addVehicle",
@@ -112,4 +121,34 @@ export const PRESETS: Record<
       },
     ],
   },
-};
+  {
+    name: "With Arrows",
+    description: "Like Standard, but Arrows also light up.",
+    icon: <AltRoute sx={{ color: "#3e3b35" }} />,
+    iconBg: "#D4C2A3",
+    linkColor: "#8B7355",
+    intersectionDescription: {
+      north: standardRoad,
+      east: standardRoad,
+      south: standardRoad,
+      west: standardRoad,
+    },
+    controller: "simple-controller",
+    commands: [],
+  },
+  {
+    name: "Balancing",
+    description: "Traffic is balanced based on which road is busier.",
+    icon: <Balance sx={{ color: "#3e3b35" }} />,
+    iconBg: "#D6DDE0",
+    linkColor: "#6A7C87",
+    intersectionDescription: {
+      north: standardRoad,
+      east: standardRoad,
+      south: standardRoad,
+      west: standardRoad,
+    },
+    controller: "simple-controller",
+    commands: [],
+  },
+];
